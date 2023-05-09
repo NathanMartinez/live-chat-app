@@ -110,7 +110,6 @@ socket.on('connected users', update_connected_users);
 socket.on('notification', show_notification);
 
 function update_connected_users(users) {
-    console.log(users)
 	user_list.innerHTML = '';
 	users.forEach((user) => {
 		add_user(user);
