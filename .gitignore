@@ -1,0 +1,36 @@
+# Logs
+logs/
+*.log
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Dependency directories
+puppeteer/
+chrome-launcher/
+
+# Build output
+dist/
+build/
+out/
+.DS_Store
+
+# Environment variables
+.env
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Mac-specific
+.DS_Store
+
+# Testing files
+coverage/
