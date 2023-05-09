@@ -68,7 +68,7 @@ function add_user(username) {
 
 function show_notification(message) {
 	const toastElement = document.createElement('div');
-	toastElement.classList.add('toast', 'show', 'bg-dark', 'text-light'); // Added 'bg-dark' and 'text-light' classes for dark background and light-colored text
+	toastElement.classList.add('toast', 'show', 'bg-dark', 'text-light'); 
 	toastElement.setAttribute('role', 'alert');
 	toastElement.setAttribute('aria-live', 'assertive');
 	toastElement.setAttribute('aria-atomic', 'true');
