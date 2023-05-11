@@ -17,10 +17,19 @@ const chat_bot = 'Chat bot';
 // A map to hold all connected users
 const connected_users = new Map();
 // Array to store the chat log
-const chat_log = []; 
+const chat_log = [];
 
 // Socket.IO event handling
-io.on('connection', handle_connection);
+io.on('connection', (socket) => {
+	registerUserHandlers(io, socket);
+});
+
+function registerUserHandlers(io, socket) {
+	function addUser(username) {
+		
+	}
+	socket.on("user:add", addUser)
+}
 
 function handle_connection(socket) {
 	// Event listener for when someone joins
@@ -106,7 +115,7 @@ function emit_connected_users() {
 
 function emit_notification(message) {
 	if (!message) return;
-	io.emit('notification', message)
+	io.emit('notification', message);
 }
 
 // Start the server
