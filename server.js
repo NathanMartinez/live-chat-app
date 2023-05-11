@@ -12,10 +12,12 @@ app.use(morgan('tiny'));
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 
+// Name of the chat bot
+const chat_bot = 'Chat bot';
 // A map to hold all connected users
 const connected_users = new Map();
-const chat_bot = 'Chat bot';
-const chat_log = []; // Array to store the chat log
+// Array to store the chat log
+const chat_log = []; 
 
 // Socket.IO event handling
 io.on('connection', handle_connection);
@@ -110,5 +112,5 @@ function emit_notification(message) {
 // Start the server
 const port = 3000;
 server.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+	console.log(`Server is listening on port ${port}`);
 });

@@ -8,7 +8,7 @@ function join_chat(event) {
 	// Save username in session storage
 	sessionStorage.setItem('username', username);
 	// Redirect to the /chat endpoint
-	window.location.href = '/chat.html';
+	window.location.href = '/chat';
 }
 
 form.addEventListener('submit', join_chat);
