@@ -18,39 +18,18 @@ const chatBot = 'Chat bot';
 // A map to hold all connected users
 const connectedUsers = new Map();
 // Array to store the chat log
-const chatLog = [];
+const chat_log = [];
 
-function emitNotification(message) {
-  if (!message) return;
-  io.emit('notification', message);
-}
+// Socket.IO event handling
+io.on('connection', (socket) => {
+	registerUserHandlers(io, socket);
+});
 
-function emitConnectedUsers() {
-  // Get the list of connected users
-  const connectedUsersData = Array.from(connectedUsers.values());
-
-  // Emit the connected users to all connected clients
-  io.emit('connected users', connectedUsersData);
-}
-
-function emitJoinMessage(username) {
-  // Emit a message to all connected clients about the new user joining
-  const message = `${username} has joined the chat.`;
-  // Send notification to all connected clients
-  emitNotification(message);
-  // Update the connected users for all clients
-  emitConnectedUsers();
-}
-
-function emitChatMessage(messageData) {
-  // Set the default username as chatBot if it is not provided
-  const username = messageData.username || chatBot;
-
-  // Create a new object with the updated username and message
-  const updatedMessageData = { ...messageData, username };
-
-  // Emit the chat message to all connected clients
-  io.emit('chat message', updatedMessageData);
+function registerUserHandlers(io, socket) {
+	function addUser(username) {
+		
+	}
+	socket.on("user:add", addUser)
 }
 
 function handleConnection(socket) {
