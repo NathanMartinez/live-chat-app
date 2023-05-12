@@ -22,8 +22,22 @@ function getUsernameWithFallback() {
   return fallbackUsername;
 }
 
-function addMessage({ message, username }) {
-  if (!message || !username) return;
+function getRoomFromSession() {
+  const storedRoom = sessionStorage.getItem('room');
+
+  if (storedRoom) {
+    return storedRoom;
+  }
+
+  const defaultRoom = 'general';
+
+  sessionStorage.setItem('room', defaultRoom);
+
+  return defaultRoom;
+}
+
+function addMessage({ message, username = 'Chat Bot' }) {
+  if (!message) return;
 
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message');
@@ -43,16 +57,17 @@ function addMessage({ message, username }) {
 }
 
 function onLoad() {
-  const chatBot = 'Chat Bot';
   const username = getUsernameWithFallback();
-  const message = `Welcome to the room, ${username}!`;
-  addMessage({ username: chatBot, message });
+  const room = getRoomFromSession();
+  const message = `Welcome to ${room}, ${username}!`;
+  addMessage({ message });
 }
 
 function handleSubmit(event) {
   event.preventDefault();
   const message = messageInput.value;
-  socket.emit('chat message', message);
+  const room = getRoomFromSession(); // Get the room from session storage
+  socket.emit('user:message', room, message); // Pass the room along with the message
   messageInput.value = '';
 }
 
@@ -83,21 +98,6 @@ function showNotification(message) {
   }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', onLoad);
-
-chatForm.addEventListener('submit', handleSubmit);
-
-socket.on('connect', () => {
-  const username = getUsernameWithFallback();
-  socket.emit('join', username);
-});
-
-socket.on('chat log', (chatLog) => {
-  chatLog.forEach((messageData) => {
-    addMessage(messageData);
-  });
-});
-
 function updateConnectedUsers(users) {
   userList.innerHTML = '';
   users.forEach((user) => {
@@ -105,10 +105,31 @@ function updateConnectedUsers(users) {
   });
 }
 
-socket.on('disconnect', showNotification);
+document.addEventListener('DOMContentLoaded', onLoad);
 
-socket.on('chat message', addMessage);
+chatForm.addEventListener('submit', handleSubmit);
 
-socket.on('connected users', updateConnectedUsers);
+socket.on('connect', () => {
+  const username = getUsernameWithFallback();
+  const room = getRoomFromSession();
+  socket.emit('user:connected', room, username);
+  socket.emit('user:join', room);
+});
 
-socket.on('notification', showNotification);
+socket.on('user:notification', showNotification);
+
+socket.on('user:message', (messageData) => {
+  addMessage(messageData);
+});
+
+socket.on('user:list', (users) => {
+  updateConnectedUsers(users);
+});
+
+socket.on('disconnect', () => {
+  showNotification('Disconnected from the server.');
+});
+
+socket.on('connect_error', () => {
+  showNotification('Failed to connect to the server.');
+});
