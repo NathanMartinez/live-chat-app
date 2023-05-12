@@ -13,81 +13,65 @@ app.use(morgan('tiny'));
 // Serve static files from the "public" directory
 app.use(express.static('public'));
 
-// Name of the chat bot
-const chatBot = 'Chat bot';
 // A map to hold all connected users
 const connectedUsers = new Map();
-// Array to store the chat log
-const chat_log = [];
+
+// user handlers
+const registerUserHandlers = (socket) => {
+  function getUsersInRoom(room) {
+    return Array.from(connectedUsers.values())
+      .filter((user) => user.room === room)
+      .map((user) => user.username);
+  }
+
+  const userConnected = (room, username) => {
+    const user = { username, room };
+    connectedUsers.set(socket.id, user);
+  };
+
+  const userJoinRoom = (room) => {
+    socket.join(room);
+    io.to(room).emit('user:list', getUsersInRoom(room));
+  };
+
+  const userNotification = (message) => {
+    io.emit('user:notification', message);
+  };
+
+  const userMessage = (room, message) => {
+    const { username } = connectedUsers.get(socket.id);
+    const messageData = { username, message };
+    io.to(room).emit('user:message', messageData);
+    io.to(room).emit('user:list', getUsersInRoom(room));
+  };
+
+  const userList = () => Array.from(connectedUsers.values());
+
+  const userDisconnected = () => {
+    const user = connectedUsers.get(socket.id);
+    if (user) {
+      connectedUsers.delete(socket.id);
+      io.to(user.room).emit('user:list', getUsersInRoom(user.room));
+      io.emit('user:notification', `${user.username} has left the room.`);
+    }
+  };
+
+  socket.on('user:connected', userConnected);
+  socket.on('user:join', userJoinRoom);
+  socket.on('user:notification', userNotification);
+  socket.on('user:message', userMessage);
+  socket.on('user:list', userList);
+  socket.on('disconnect', userDisconnected);
+};
 
 // Socket.IO event handling
 io.on('connection', (socket) => {
-	registerUserHandlers(io, socket);
+  registerUserHandlers(socket);
 });
-
-function registerUserHandlers(io, socket) {
-	function addUser(username) {
-		
-	}
-	socket.on("user:add", addUser)
-}
-
-function handleConnection(socket) {
-  // Event listener for when someone joins
-  socket.on('join', (username) => {
-    connectedUsers.set(socket.id, username);
-
-    emitJoinMessage(username);
-
-    // Send the chat log to the newly joined client
-    socket.emit('chat log', chatLog);
-
-    // Update the connected users for all clients
-    emitConnectedUsers();
-  });
-
-  function handleChatMessage(message) {
-    // Get the username from connectedUsers
-    const username = connectedUsers.get(this.id);
-
-    // Create an object with the username and message
-    const messageData = { username, message };
-
-    // Add the message to the chat log
-    chatLog.push(messageData);
-
-    // Broadcast the chat message to all connected clients
-    emitChatMessage(messageData);
-  }
-
-  function handleDisconnect() {
-    // Get the username from the socket's data property
-    const username = connectedUsers.get(this.id);
-
-    // Remove the disconnected user from the connectedUsers map
-    connectedUsers.delete(this.id);
-
-    // Emit a message to all connected clients about the disconnect
-    if (username) {
-      const disconnectMessage = `${username} has disconnected.`;
-      // Emit the chat message to all connected clients
-      emitNotification(disconnectMessage);
-
-      // Update the connected users for all clients
-      emitConnectedUsers();
-    }
-  }
-
-  // Event listener for receiving chat messages
-  socket.on('chat message', handleChatMessage);
-
-  // Event listener for when someone disconnects
-  socket.on('disconnect', handleDisconnect);
-}
-
-// Socket.IO event handling
-io.on('connection', handleConnection);
 
 // Start the server
 const port = 3000;
-server.listen(port);
+server.listen(port, () => {
+  // eslint-disable-next-line no-console
+  console.log(`Server running on port ${port}`);
+});
