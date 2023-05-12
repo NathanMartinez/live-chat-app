@@ -130,7 +130,7 @@ The Live Chat App is built using the following technologies:
 
 ## Credits
 
-The Live Chat App is developed by [Your Name] and is available under the [MIT License](LICENSE).
+The Live Chat App is developed by Nathan Martinez and is available under the [MIT License](LICENSE).
 
 ## Contributing
 
