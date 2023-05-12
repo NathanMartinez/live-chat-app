@@ -1,80 +1,64 @@
-# Live Chat Application
+# Live Chat App
 
-This is a real-time chat application built with Socket.IO, Node.js, and Express. It allows multiple users to join a chat room and exchange messages in real-time.
+A real-time chat application built with Socket.IO and Express. Users can join different chat rooms and communicate with each other instantly.
 
 ## Features
 
-- Real-time messaging: Users can send and receive messages instantly.
-- User management: Users can join the chat room with a username and see a list of connected users.
-- Chat log: New users can view the chat history when they join the room.
-- Notifications: Notifications are displayed for important events such as user join/leave and system messages.
-
-## Technologies Used
-
-- Node.js
-- Express
-- Socket.IO
-- HTML
-- CSS
-- JavaScript
-
-## Prerequisites
-
-- Node.js and npm installed on your machine.
+- **Real-time Chat**: Users can send and receive messages in real-time.
+- **Multiple Rooms**: Users can join different chat rooms and have separate conversations.
+- **User Notifications**: Notifications are displayed when users join or leave a room.
+- **User Listing**: Displays the list of users connected to the current room.
+- **Responsive Design**: The application is designed to work seamlessly on different screen sizes.
 
 ## Installation
 
 1. Clone the repository:
 
-   ```shell
+   ```bash
    git clone https://github.com/NathanMartinez/live-chat-app.git
    ```
 
-2. Navigate to the project directory:
+2. Install the dependencies:
 
-    ```shell
-    cd live-chat-app
-    ```
+   ```bash
+   cd live-chat-app
+   npm install
+   ```
 
-3. Install the dependencies:
+3. Start the server:
 
-    ```shell
-    npm install
-    ```
+   ```bash
+   npm start
+   ```
+
+4. Open the application in your browser:
+
+   ```
+   http://localhost:3000
+   ```
 
 ## Usage
 
-1. Start the server:
+1. Enter a username in the prompt and click **Join Chat**.
+2. Enter a custom room name or leave it blank to join the default "general" room.
+3. Start sending and receiving messages in real-time.
 
-    ```shell
-    npm start
-    ```
+## Configuration
 
-2. Open your web browser and visit http://localhost:3000 to access the chat application.
+The application can be configured using environment variables. Create a `.env` file in the root directory and set the following variables:
 
-3. Enter a username and click the "Join" button to join the chat room.
+- `PORT`: The port number to run the server (default is `3000`).
+- `SESSION_SECRET`: The secret key used for session encryption.
 
-4. Type your message in the input field at the bottom and press Enter or click the "Send" button to send the message.
+## Technologies Used
 
-5. You can see the chat messages in the main chat area and the list of connected users in the sidebar.
-
-## Customization
-
-- Dark Theme: The application uses a dark theme by default. You can modify the CSS styles in the index.html file to customize the look and feel according to your preferences.
-- Security: The application incorporates basic security measures, but for production use, it is recommended to implement additional security enhancements like input validation, authentication, and secure communication.
-
-## Contributing
-
-Contributions are welcome! If you have any suggestions, bug reports, or feature requests, please open an issue or submit a pull request.
+- **Socket.IO**: Enables real-time bidirectional event-based communication between the server and clients.
+- **Express**: A fast and minimalist web application framework for Node.js.
+- **HTML**: The standard markup language for creating web pages.
+- **CSS**: The language used for styling the application.
+- **JavaScript**: The programming language used for client-side functionality.
+- **npm**: The package manager for Node.js and JavaScript.
 
 ## License
 
-This project is licensed under the MIT License.
-
-## Acknowledgments
-
-- The project was inspired by Socket.IO documentation and examples.
-- Thanks to the contributors of the libraries and frameworks used in this project.
-
-
-Feel free to modify and customize the content of the README file according to your project's specific details and requirements.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
